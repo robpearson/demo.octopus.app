@@ -91,3 +91,7 @@ variable "OctopusPrintEvaluatedVariables" {
 variable "OctopusPrintVariables" {
     value "False" {}
 }
+
+variable "my-new-varaible" {
+    value "asdf" {}
+}
