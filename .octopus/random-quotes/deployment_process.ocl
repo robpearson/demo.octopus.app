@@ -13,6 +13,7 @@ step "approve-deployment" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "True"
             Octopus.Action.Manual.Instructions = "Please enter notes below and either approve or cancel the deployment."
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
     }
@@ -280,7 +281,22 @@ step "send-completion-notification" {
             Octopus.Action.Email.Body = "#{Octopus.Release.Notes}"
             Octopus.Action.Email.Subject = "Release #{Octopus.Release.Number} has been deployed to #{Octopus.Environment.Name} for #{Octopus.Deployment.Tenant.Name}"
             Octopus.Action.Email.To = "#{Octopus.Deployment.CreatedBy.EmailAddress}"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
+    }
+}
+
+step "check-upgrade-eligibility" {
+    name = "Check upgrade Eligibility"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.Script.ScriptBody = "echo Checking current version against customer max version ... "
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "Bash"
+        }
+        worker_pool = "hosted-ubuntu"
     }
 }
