@@ -15,7 +15,6 @@ step "approve-production-release" {
             Octopus.Action.Manual.Instructions = "Please provide approval notes."
             Octopus.Action.RunOnServer = "false"
         }
-        worker_pool_variable = ""
     }
 }
 
@@ -167,7 +166,7 @@ step "deploy-trading-site" {
         notes = "Make a request to the site to verify that it is running correctly."
         properties = {
             Octopus.Action.Script.ScriptBody = <<-EOT
-                $URI = $OctopusParameters["OctoFX.TradingSite.Url"]
+                $URI = "http://$($OctopusParameters['Octopus.Machine.Name']).westus2.cloudapp.azure.com"
                 Invoke-WebRequest -URI "${URI}" -UseBasicParsing
                 
                 Write-Highlight "[$URI](${URI})"
@@ -225,6 +224,5 @@ step "send-completion-notification" {
             Octopus.Action.Email.To = "#{Octopus.Deployment.CreatedBy.EmailAddress}"
             Octopus.Action.RunOnServer = "false"
         }
-        worker_pool_variable = ""
     }
 }
