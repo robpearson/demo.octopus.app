@@ -13,8 +13,8 @@ step "approve-deployment" {
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "True"
             Octopus.Action.Manual.Instructions = "Please enter notes below and either approve or cancel the deployment."
+            Octopus.Action.RunOnServer = "false"
         }
-        worker_pool_variable = ""
     }
 }
 
@@ -232,24 +232,8 @@ step "configure-web-app-post-deploy" {
     }
 }
 
-step "configure-sso" {
-    name = "Configure SSO"
-
-    action {
-        action_type = "Octopus.Script"
-        notes = "Configure the SSO feature for any tenants with the SSO tag."
-        properties = {
-            Octopus.Action.Script.ScriptBody = "Write-Host \"Configuring SSO\""
-            Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "PowerShell"
-        }
-        tenant_tags = ["Feature Set/SSO"]
-        worker_pool = "azure-worker-pool"
-    }
-}
-
 step "configure-custom-branding" {
-    name = "Configure Custom Branding"
+    name = "Turn-on Custom branding"
 
     action {
         action_type = "Octopus.Script"
@@ -260,6 +244,22 @@ step "configure-custom-branding" {
             Octopus.Action.Script.Syntax = "PowerShell"
         }
         tenant_tags = ["Feature Set/Custom Branding"]
+        worker_pool = "azure-worker-pool"
+    }
+}
+
+step "configure-sso" {
+    name = "Turn-on SSO"
+
+    action {
+        action_type = "Octopus.Script"
+        notes = "Configure the SSO feature for any tenants with the SSO tag."
+        properties = {
+            Octopus.Action.Script.ScriptBody = "Write-Host \"Configuring SSO\""
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+        }
+        tenant_tags = ["Feature Set/SSO"]
         worker_pool = "azure-worker-pool"
     }
 }
@@ -280,7 +280,7 @@ step "send-completion-notification" {
             Octopus.Action.Email.Body = "#{Octopus.Release.Notes}"
             Octopus.Action.Email.Subject = "Release #{Octopus.Release.Number} has been deployed to #{Octopus.Environment.Name} for #{Octopus.Deployment.Tenant.Name}"
             Octopus.Action.Email.To = "#{Octopus.Deployment.CreatedBy.EmailAddress}"
+            Octopus.Action.RunOnServer = "false"
         }
-        worker_pool_variable = ""
     }
 }
