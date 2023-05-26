@@ -93,5 +93,5 @@ variable "OctopusPrintVariables" {
 }
 
 variable "my-new-varaible" {
-    value "asdf" {}
+    value "asdf2" {}
 }
